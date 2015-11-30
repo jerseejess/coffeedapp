@@ -71,6 +71,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'coffeedapp.wsgi.application'
 
+ON_HEROKU = os.environ.get('ON_HEROKU')
+
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
