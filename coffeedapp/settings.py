@@ -16,6 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MAIN_DIR = os.path.dirname(os.path.dirname(__file__))
 
+ON_HEROKU = os.environ.get('ON_HEROKU')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -25,6 +26,8 @@ SECRET_KEY = 'ibksla7_#&hvopbfrohw1^p6*-#3+@jgi(p2a5+#tc!e(1egcs'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -38,6 +41,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -71,22 +75,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'coffeedapp.wsgi.application'
 
-ON_HEROKU = os.environ.get('ON_HEROKU')
-
-
 # Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+if ON_HEROKU == True:
+    # Parse database configuration from $DATABASE_URL
+    import dj_database_url
+    DATABASES['default'] =  dj_database_url.config()
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
 
-# Parse database configuration from $DATABASE_URL
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -121,3 +124,8 @@ TEMPLATE_DIRS = (
 STATICFILES_DIRS = (
     os.path.join(MAIN_DIR, 'static'),
     )
+
+STATIC_ROOT = 'staticfiles'
+
+
+
